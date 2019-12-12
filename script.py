@@ -7,21 +7,20 @@
 # every dot you eat will add 10 points to your total score
 # but if you hit the wall or hit yourself, 
 # the game is over. 
-# you can restart the game by pressing the space bar
 
-import sys
-import pygame
+
+import pygame as pg
 from my_module import functions as fn
 
 
 X = 500
 Y = 500
 def main():
-    pygame.init()
+    pg.init()
     screen_size = (X,Y)
-    screen = pygame.display.set_mode(screen_size)
-    pygame.display.set_caption("Snake")
-    clock = pygame.time.Clock()
+    screen = pg.display.set_mode(screen_size)
+    pg.display.set_caption("Snake")
+    clock = pg.time.Clock()
     score = 0
     dead = False
 
@@ -29,35 +28,35 @@ def main():
     food = fn.Food()
 
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                return False
+            if event.type == pg.KEYDOWN:
                 snake.changedirection(event.key)
-                if event.key == pygame.K_SPACE and dead:
+                if event.key == False:
                     return main()
         screen.fill((255,236,50))
 
         dead = snake.dead()
         if dead:
-            sfont = pygame.font.SysFont('arial',40)
+            sfont = pg.font.SysFont('arial',40)
             screen.blit(sfont.render('Game Over!',1,(227,29,18)),(140,200))
-            sfont = pygame.font.SysFont('arial',20)
-            screen.blit(sfont.render('Press the space bar to try again!',1,(0,0,22)),(110,250))
+            sfont = pg.font.SysFont('arial',20)
             screen.blit(sfont.render('Score:{}'.format(score),1,(0,0,22)),(20,400))
         
         if not dead:
-            snake.move()
+            snake.addbody()
+            snake.deletebody()
         for rect in snake.sbody:
-           pygame.draw.rect(screen,(255,153,153),rect,0)
+           pg.draw.rect(screen,(255,153,153),rect,0)
         if food.rect == snake.sbody[0]:
             score+=10
             snake.addbody()
             food.remove()
 
         food.pos()
-        pygame.draw.rect(screen,(0,0,0),food.rect,0)
+        pg.draw.rect(screen,(0,0,0),food.rect,0)
 
-        pygame.display.update()
-        clock.tick(10)
+        pg.display.update()
+        clock.tick(6)
 main()
